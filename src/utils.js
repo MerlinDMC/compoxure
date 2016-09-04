@@ -30,18 +30,14 @@ function timeToMillis(timeString) {
 
 }
 
+var _RX_KEY_STATSD = new RegExp('[\.:\/-]', 'g');
 function cacheKeytoStatsd(key) {
-  key = key.replace(/\./g, '_');
-  key = key.replace(/-/g, '_');
-  key = key.replace(/:/g, '_');
-  key = key.replace(/\//g, '_');
-  return key;
+  return key.replace(_RX_KEY_STATSD, '_');
 }
 
 function urlToCacheKey(url) {
   url = url.replace('http://', '');
-  url = cacheKeytoStatsd(url);
-  return url;
+  return cacheKeytoStatsd(url);
 }
 
 function updateTemplateVariables(templateVars, variables) {
