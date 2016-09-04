@@ -2,32 +2,29 @@
 
 var _ = require('lodash');
 
+var _RX_TIME_EXT_P = new RegExp('[^0-9]+$');
 function timeToMillis(timeString) {
+  var matched = _RX_TIME_EXT_P.exec(timeString),
+      num = timeString,
+      period = 'ms';
 
-  var matched = new RegExp('(\\d+)(.*)').exec(timeString),
-    num = matched[1],
-    period = matched[2] || 'ms',
-    value = 0;
+  if (matched !== null) {
+    num = timeString.substr(0, timeString.length - matched[0].length);
+    period = matched[0];
+  }
 
   switch (period) {
   case 's':
-    value = parseInt(num) * 1000;
-    break;
+    return Number(num) * 1000;
   case 'm':
-    value = parseInt(num) * 1000 * 60;
-    break;
+    return Number(num) * 1000 * 60;
   case 'h':
-    value = parseInt(num) * 1000 * 60 * 60;
-    break;
+    return Number(num) * 1000 * 60 * 60;
   case 'd':
-    value = parseInt(num) * 1000 * 60 * 60 * 24;
-    break;
+    return Number(num) * 1000 * 60 * 60 * 24;
   default:
-    value = parseInt(num);
+    return Number(num);
   }
-
-  return value;
-
 }
 
 var _RX_KEY_STATSD = new RegExp('[\.:\/-]', 'g');
