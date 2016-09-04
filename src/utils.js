@@ -40,13 +40,14 @@ function urlToCacheKey(url) {
 function updateTemplateVariables(templateVars, variables) {
 
   _.each(_.filter(_.keys(variables), function (key) {
-    if (key.indexOf('x-') >= 0) { return true; }
+    return key.startsWith('x-') || key.startsWith('cx-');
   }), function (cxKey) {
 
     var variable = variables[cxKey],
-      strippedKey = cxKey.replace('x-', ''),
-      variableKey = strippedKey.split('|')[0],
-      variableName = strippedKey.replace(variableKey + '|', '');
+        strippedKey = cxKey.substr(cxKey.indexOf('-') + 1),
+        pipeIdx = strippedKey.indexOf('|'),
+        variableKey = strippedKey.substr(0, pipeIdx),
+        variableName = strippedKey.substr(pipeIdx + 1);
 
     templateVars[variableKey + ':' + variableName] = variable;
     templateVars[variableKey + ':' + variableName + ':encoded'] = encodeURI(variable);
